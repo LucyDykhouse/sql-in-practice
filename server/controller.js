@@ -63,7 +63,7 @@ module.exports = {
             .query(`update cc_appointments
             set approved = true
             where appt_id = ${apptId};
-                 
+
             insert into cc_emp_appts (emp_id, appt_id)
             values (${nextEmp}, ${apptId}),
             (${nextEmp + 1}, ${apptId});
@@ -73,5 +73,16 @@ module.exports = {
                 nextEmp += 2
             })
             .catch(err => console.log(err))
+    },
+
+    completeAppointment: (req, res) => {
+        let {apptId} = req.body;
+
+        sequelize
+            .query(`update cc_appointments
+                set completed = true
+                where appt_id = ${apptId};`)
+            .then(dbRes => res.status(200).send(dbRes[0]))
+            .catch(err => console.log(err));
     }
 }
