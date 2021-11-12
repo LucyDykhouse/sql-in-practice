@@ -17,7 +17,16 @@ module.exports = {
     getAllClients:(req, res) => {
         sequelize
             .query(`select * from cc_users u
-            join cc_clients c on u.user_id = c.user_id`)
+            join cc_clients c on u.user_id = c.user_id;`)
+            .then(dbRes => res.status(200).send(dbRes[0]))
+            .catch(err => console.log(err));
+    },
+
+    getPendingAppointments: (req, res) => {
+        sequelize
+            .query(`select * from cc_appointments a
+            where a.approved = false
+            order by a.date desc;`)
             .then(dbRes => res.status(200).send(dbRes[0]))
             .catch(err => console.log(err));
     },
